@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  api-gateway:
+    build: ./packages/api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - task-service
+
+  user-service:
+    build: ./packages/user-service
+    environment:
+      - DB_HOST=postgres-users
+      - JWT_SECRET=your_secret_key
+
+  task-service:
+    build: ./packages/task-service
+    environment:
+      - DB_HOST=postgres-tasks
+
+  postgres-users:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: user_service_db
+      POSTGRES_PASSWORD: password
+
+  postgres-tasks:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: task_service_db
+      POSTGRES_PASSWORD: password
